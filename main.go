@@ -12,9 +12,15 @@ import (
 const (
 	sshPortEnv  = "SSH_PORT"
 	httpPortEnv = "PORT"
+	plainTextEnv = "PLAINTEXT"
+	gameWidthEnv = "GAMEWIDTH"
+	gameHeightEnv = "GAMEHEIGHT"
 
 	defaultSshPort  = "2022"
 	defaultHttpPort = "3000"
+	defaultPlainText = "false"
+	defaultGameWidth = "78"
+	defaultGameHeight = "22"
 )
 
 func handler(conn net.Conn, gm *GameManager, config *ssh.ServerConfig) {
@@ -82,6 +88,10 @@ func port(env, def string) string {
 func main() {
 	sshPort := port(sshPortEnv, defaultSshPort)
 	httpPort := port(httpPortEnv, defaultHttpPort)
+	// Stealing the port usage because it should commodate what we need...
+	plainText := port(plainTextEnv, defaultPlainText)
+	gameWidth := port(gameWidthEnv, defaultGameWidth)
+	gameHeight := port(gameHeightEnv, defaultGameHeight)
 
 	// Everyone can login!
 	config := &ssh.ServerConfig{
@@ -104,10 +114,15 @@ func main() {
 	gm := NewGameManager()
 
 	fmt.Printf(
-		"Listening on port %s for SSH and port %s for HTTP...\n",
+		"Listening on port %s for SSH and port %s for HTTP\nWith dimentions of %s x %s\nPlain Text mode is set to %s...\n",
 		sshPort,
 		httpPort,
+		gameWidth,
+		gameHeight,
+		plainText,
 	)
+
+
 
 	go func() {
 		panic(http.ListenAndServe(httpPort, http.FileServer(http.Dir("./static/"))))

@@ -319,8 +319,8 @@ type Tile struct {
 }
 
 const (
-	gameWidth  = 78
-	gameHeight = 22
+	//gameWidth  = 78
+	//gameHeight = 22
 
 	keyW = 'w'
 	keyA = 'a'
